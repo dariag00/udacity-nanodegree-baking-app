@@ -10,24 +10,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bakingapp.R;
 import com.example.bakingapp.data.http.recipes.Recipe;
-import com.example.bakingapp.data.http.recipes.Step;
 import com.example.bakingapp.ui.detail.StepDetailActivity;
+import com.example.bakingapp.ui.detail.StepDetailFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecipeFragment extends Fragment implements StepsAdapter.StepClickListener {
 
-    public static final String RECIPEE = "recipe";
+    public static final String RECIPE = "recipe";
 
     private Recipe recipe;
 
     private StepsAdapter stepsAdapter;
+    private boolean twoPane;
     private IngredientsAdapter ingredientsAdapter;
 
     @BindView(R.id.rv_ingredients)
@@ -37,6 +39,11 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
     RecyclerView stepsRecyclerView;
 
     public RecipeFragment(){
+        this.twoPane = false;
+    }
+
+    public RecipeFragment(boolean twoPane){
+        this.twoPane = twoPane;
     }
 
 
@@ -45,7 +52,7 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if(savedInstanceState != null){
-            recipe = (Recipe) savedInstanceState.getSerializable(RECIPEE);
+            recipe = (Recipe) savedInstanceState.getSerializable(RECIPE);
         }
         View rootView = inflater.inflate(R.layout.fragment_recipe, container, false);
 
@@ -83,16 +90,24 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(RECIPEE, recipe);
+        outState.putSerializable(RECIPE, recipe);
     }
 
     @Override
     public void onStepClick(int clickedStep) {
-        Intent intent = new Intent(getActivity(), StepDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("recipe", recipe);
-        bundle.putInt("clickedStep", clickedStep);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        if(twoPane){
+            StepDetailFragment stepFragment = new StepDetailFragment();
+            stepFragment.setStep(recipe.getSteps().get(clickedStep));
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.recipe_steps_container, stepFragment)
+                    .commit();
+        }else {
+            Intent intent = new Intent(getActivity(), StepDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("recipe", recipe);
+            bundle.putInt("clickedStep", clickedStep);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

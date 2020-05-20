@@ -4,13 +4,14 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/recipee_container"
+        android:id="@+id/recipe_container"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:tag="@string/large_tag"
         android:layout_height="match_parent"/>
 
     <FrameLayout
-        android:id="@+id/recipee_steps_container"
+        android:id="@+id/recipe_steps_container"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="match_parent"/>

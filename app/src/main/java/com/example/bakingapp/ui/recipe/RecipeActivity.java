@@ -1,6 +1,7 @@
 package com.example.bakingapp.ui.recipe;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -15,15 +16,20 @@ import com.example.bakingapp.data.http.recipes.Recipe;
 import com.example.bakingapp.ui.detail.StepDetailFragment;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Optional;
 
-import static com.example.bakingapp.ui.recipe.RecipeFragment.RECIPEE;
+import static com.example.bakingapp.ui.recipe.RecipeFragment.RECIPE;
 
 public class RecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
     private boolean twoPane;
-    @BindView(R.id.recipee_steps_container)
+    @Nullable
+    @BindView(R.id.recipe_steps_container)
     FrameLayout stepsRecipeContainer;
+    @BindView(R.id.recipe_container)
+    FrameLayout recipeContainer;
     private int currentStep;
 
     @Override
@@ -31,8 +37,10 @@ public class RecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
 
+        ButterKnife.bind(this);
+
         if(savedInstanceState != null){
-            recipe = (Recipe) savedInstanceState.getSerializable(RECIPEE);
+            recipe = (Recipe) savedInstanceState.getSerializable(RECIPE);
         }
 
         Intent intent = this.getIntent();
@@ -40,16 +48,17 @@ public class RecipeActivity extends AppCompatActivity {
         if(bundle != null){
             recipe = (Recipe) bundle.getSerializable("recipe");
         }
-
-        if(stepsRecipeContainer != null){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        String tag = (String) recipeContainer.getTag();
+        if(tag.equals(getString(R.string.large_tag))){
             twoPane = true;
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             currentStep = 0;
+
             StepDetailFragment stepFragment = new StepDetailFragment();
             stepFragment.setStep(recipe.getSteps().get(currentStep));
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.recipee_steps_container, stepFragment)
+                    .replace(R.id.recipe_steps_container, stepFragment)
                     .commit();
         } else {
             twoPane = false;
@@ -58,11 +67,10 @@ public class RecipeActivity extends AppCompatActivity {
         if(recipe != null){
             setTitle(recipe.getName());
 
-            RecipeFragment recipeFragment = new RecipeFragment();
+            RecipeFragment recipeFragment = new RecipeFragment(twoPane);
             recipeFragment.setRecipe(recipe);
-            FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .add(R.id.recipee_container, recipeFragment)
+                    .replace(R.id.recipe_container, recipeFragment)
                     .commit();
         }
     }
@@ -70,6 +78,6 @@ public class RecipeActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(RECIPEE, recipe);
+        outState.putSerializable(RECIPE, recipe);
     }
 }

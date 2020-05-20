@@ -15,15 +15,17 @@ import androidx.fragment.app.Fragment;
 import com.example.bakingapp.R;
 import com.example.bakingapp.data.http.recipes.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -33,9 +35,10 @@ import butterknife.ButterKnife;
 public class StepDetailFragment extends Fragment {
 
     private Step step;
+    private String STEP = "step";
     private SimpleExoPlayer exoPlayer;
     @BindView(R.id.exoPlayerView)
-    SimpleExoPlayerView playerView;
+    PlayerView playerView;
 
     @BindView(R.id.tv_step_description)
     TextView stepDescription;
@@ -51,6 +54,11 @@ public class StepDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
         ButterKnife.bind(this, rootView);
+
+        if(savedInstanceState != null){
+            step = (Step) savedInstanceState.getSerializable(STEP);
+        }
+
         System.out.println("URL " + step.getVideoURL());
 
         if(!step.getVideoURL().isEmpty()) {
@@ -68,6 +76,11 @@ public class StepDetailFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         releasePlayer();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable(STEP, step);
     }
 
     private void initializePlayer(Uri mediaUri){
