@@ -60,4 +60,10 @@ dependencies {
 
     //Shared Preferences
     implementation "androidx.preference:preference:1.1.1"
+
+    //Espresso
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestCompile 'androidx.test.espresso:espresso-contrib:3.2.0'
 }

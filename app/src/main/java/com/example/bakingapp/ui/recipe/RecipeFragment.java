@@ -49,6 +49,9 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
     @BindView(R.id.button_attach_widget)
     Button attachButton;
 
+    @BindView(R.id.tv_recipe_name)
+    TextView recipeName;
+
     public RecipeFragment(){
         this.twoPane = false;
     }
@@ -95,6 +98,7 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
     }
 
     private void initializeData(Recipe recipe){
+        recipeName.setText(recipe.getName());
         initializeIngredientsData(recipe);
         initializeStepsData(recipe);
     }

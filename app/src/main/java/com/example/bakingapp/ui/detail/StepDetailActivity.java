@@ -69,6 +69,7 @@ public class StepDetailActivity extends AppCompatActivity {
         if(currentStep == 0){
             previousStepButton.setVisibility(View.INVISIBLE);
         }else if(currentStep == steps.size() -1 ){
+            previousStepButton.setVisibility(View.VISIBLE);
             nextStepButton.setVisibility(View.INVISIBLE);
         }else if(previousStepButton.getVisibility() == View.INVISIBLE || nextStepButton.getVisibility() == View.INVISIBLE){
             previousStepButton.setVisibility(View.VISIBLE);

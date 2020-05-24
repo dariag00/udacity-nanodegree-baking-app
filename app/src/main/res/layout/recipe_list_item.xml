@@ -29,12 +29,12 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_recipee"
+                android:id="@+id/tv_recipe"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                tools:text="Recipee"/>
+                tools:text="Recipe"/>
 
             <ImageView
                 android:layout_width="0dp"
