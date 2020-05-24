@@ -72,10 +72,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.Recipe
 
         MainViewModelFactory factory = new MainViewModelFactory(recipesRepository);
         MainViewModel mainViewModel = new ViewModelProvider(getActivity(), factory).get(MainViewModel.class);
-        mainViewModel.getRecipeLiveData().observe(this, recipeList -> {
-            System.out.println("Size " + recipeList.size());
-            recipeAdapter.setRecipeList(recipeList);
-        });
+        mainViewModel.getRecipeLiveData().observe(getViewLifecycleOwner(), recipeList -> recipeAdapter.setRecipeList(recipeList));
 
         return rootView;
     }

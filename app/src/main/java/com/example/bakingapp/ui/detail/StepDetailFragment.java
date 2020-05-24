@@ -59,8 +59,6 @@ public class StepDetailFragment extends Fragment {
             step = (Step) savedInstanceState.getSerializable(STEP);
         }
 
-        System.out.println("URL " + step.getVideoURL());
-
         if(!step.getVideoURL().isEmpty()) {
             initializePlayer(Uri.parse(step.getVideoURL()));
         }else {

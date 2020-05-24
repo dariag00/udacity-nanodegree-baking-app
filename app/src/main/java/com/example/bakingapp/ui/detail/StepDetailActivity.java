@@ -52,14 +52,12 @@ public class StepDetailActivity extends AppCompatActivity {
         }
 
         nextStepButton.setOnClickListener(v -> {
-            System.out.println("QUE PASA");
             currentStep++;
             handleButtons();
             commitFragment();
         });
 
         previousStepButton.setOnClickListener(v -> {
-            System.out.println("QUE PASA");
             currentStep--;
             handleButtons();
             commitFragment();

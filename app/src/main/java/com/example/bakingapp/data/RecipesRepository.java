@@ -46,11 +46,9 @@ public class RecipesRepository {
     public LiveData<List<Recipe>> getRecipes(){
         Call<List<Recipe>> recipeCall = recipeAPI.getRecipes();
         MutableLiveData<List<Recipe>> recipeLiveData = new MutableLiveData<>();
-        System.out.println("Entro");
         recipeCall.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                System.out.println("Entr1o " + response.body().size());
                 recipeLiveData.setValue(response.body());
             }
 

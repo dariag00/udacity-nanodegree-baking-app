@@ -1,23 +1,31 @@
 package com.example.bakingapp.ui.recipe;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bakingapp.BakingAppWidget;
 import com.example.bakingapp.R;
 import com.example.bakingapp.data.http.recipes.Recipe;
 import com.example.bakingapp.ui.detail.StepDetailActivity;
 import com.example.bakingapp.ui.detail.StepDetailFragment;
+import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +45,9 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
     @BindView(R.id.rv_steps)
     RecyclerView stepsRecyclerView;
+
+    @BindView(R.id.button_attach_widget)
+    Button attachButton;
 
     public RecipeFragment(){
         this.twoPane = false;
@@ -60,7 +71,27 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
 
         initializeData(recipe);
 
+        attachButton.setOnClickListener(view -> attachInfoToWidget());
+
         return rootView;
+    }
+
+    private void attachInfoToWidget(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson =new Gson();
+        String json=gson.toJson(recipe.getIngredients());
+        editor.putString("ingredients",json).apply();
+        editor.commit();
+        Toast.makeText(getActivity(), "Widget updated!", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+        int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), BakingAppWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(RECIPE, recipe);
+        getActivity().getApplicationContext().sendBroadcast(intent);
     }
 
     private void initializeData(Recipe recipe){
@@ -98,7 +129,7 @@ public class RecipeFragment extends Fragment implements StepsAdapter.StepClickLi
         if(twoPane){
             StepDetailFragment stepFragment = new StepDetailFragment();
             stepFragment.setStep(recipe.getSteps().get(clickedStep));
-            getFragmentManager().beginTransaction()
+            getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.recipe_steps_container, stepFragment)
                     .commit();
         }else {

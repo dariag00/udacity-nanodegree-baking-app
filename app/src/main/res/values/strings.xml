@@ -8,4 +8,9 @@
     <string name="normal_tag">normal_layout</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="attach_the_ingredients_to_the_widget">Attach the ingredients to the widget</string>
+    <string name="ingredients_widget">BakingApp Ingredients:</string>
+    <string name="app_logo_content_desc">App Logo</string>
+    <string name="ingredients_image">Ingredients image</string>
+    <string name="recipe_image">Recipe Image</string>
 </resources>
